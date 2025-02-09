@@ -6,9 +6,9 @@
 <body>
     <h1>Welcome to the Expense Tracker</h1>
     <ul>
-        <li><a href="/add-expense/">Add Expense</a></li>
-        <li><a href="/add-income/">Add Income</a></li>
-        <li><a href="/view-expenses/">View Expenses</a></li>
+        <li><a href="{% url 'add_expense' %}">Add Expense</a></li>
+        <li><a href="{% url 'add_income' %}">Add Income</a></li>
+        <li><a href="{% url 'view_expenses' %}">View Expenses</a></li>
     </ul>
 </body>
 </html>
