@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-im^nt3ie&l7f$szpho8@4zvroe=svnw1pt(uvpjwsh0hf3mw$m
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 
 # Application definition
@@ -107,7 +107,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'America/Indianapolis'
 
 USE_I18N = True
 
@@ -118,8 +118,15 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / 'static'
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Redirect users after login/logout
+LOGIN_URL = '/'  # Redirect users to the login page when not logged in
+LOGIN_REDIRECT_URL = '/home/'  # After login, redirect to home page
+LOGOUT_REDIRECT_URL = '/'  # After logout, redirect to login page

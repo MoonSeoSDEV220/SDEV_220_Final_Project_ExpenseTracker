@@ -1,66 +1,90 @@
-from django.shortcuts import render
-from .models import Expense, Income, Category, Budget
+from django.shortcuts import render, redirect
+from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.decorators import login_required
+from .models import Expense, Income, Category, Budget  # Import necessary models
 
-# Home view
+# ✅ Login View (First Page)
+def login_view(request):
+    if request.user.is_authenticated:
+        return redirect('home')  # If already logged in, go to home
+
+    if request.method == "POST":
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
+        if user:
+            login(request, user)
+            return redirect('home')  # Redirect to home page after login
+        else:
+            return render(request, 'tracker/login.html', {'error': 'Invalid credentials'})
+
+    return render(request, 'tracker/login.html')
+
+# ✅ Logout View
+def logout_view(request):
+    logout(request)
+    return redirect('login')  # Redirect to login page after logout
+
+# ✅ Home View (Only accessible after login)
+@login_required(login_url='/')
 def home(request):
-    return render(request, 'tracker/home.html')  # Render the home page
+    return render(request, 'tracker/home.html')
 
-# Add expense view
+# ✅ Add Expense View
+@login_required(login_url='/')
 def add_expense(request):
     if request.method == "POST":
         category_name = request.POST.get('category')
         amount = request.POST.get('amount')
         description = request.POST.get('description', '')
 
-        # Check if category exists
         category, created = Category.objects.get_or_create(name=category_name)
 
-        # Save the expense
         Expense.objects.create(
             category=category,
             amount=amount,
             description=description,
-            date=request.POST.get('date', None)  # Add date
+            date=request.POST.get('date', None)
         )
         return render(request, 'tracker/add_expense.html', {'success': 'Expense added successfully!'})
 
-    return render(request, 'tracker/add_expense.html')  # Render the add expense page
+    return render(request, 'tracker/add_expense.html')
 
-# Add income view
+# ✅ Add Income View
+@login_required(login_url='/')
 def add_income(request):
     if request.method == "POST":
         amount = request.POST.get('amount')
         description = request.POST.get('description', '')
 
-        # Save the income
         Income.objects.create(
             amount=amount,
             description=description,
-            date=request.POST.get('date', None)  # Add date
+            date=request.POST.get('date', None)
         )
         return render(request, 'tracker/add_income.html', {'success': 'Income added successfully!'})
 
-    return render(request, 'tracker/add_income.html')  # Render the add income page
+    return render(request, 'tracker/add_income.html')
 
-# View expenses view
+# ✅ View Expenses
+@login_required(login_url='/')
 def view_expenses(request):
-    expenses = Expense.objects.all()  # Fetch all expenses
+    expenses = Expense.objects.all()
     return render(request, 'tracker/view_expenses.html', {'expenses': expenses})
 
-# Set budget view
+# ✅ Set Budget
+@login_required(login_url='/')
 def set_budget(request):
     if request.method == "POST":
         category_name = request.POST.get('category')
         limit = request.POST.get('limit')
 
-        # Check if category exists
         category, created = Category.objects.get_or_create(name=category_name)
 
-        # Save or update the budget
         Budget.objects.update_or_create(
             category=category,
             defaults={'limit': limit}
         )
         return render(request, 'tracker/set_budget.html', {'success': f'Budget for {category.name} set successfully!'})
 
-    return render(request, 'tracker/set_budget.html')  # Render the set budget page
+    return render(request, 'tracker/set_budget.html')
