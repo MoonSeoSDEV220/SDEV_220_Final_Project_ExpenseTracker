@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Analytics Dashboard</title>
+</head>
+<body>
+    <h1>Expense Analytics</h1>
+
+    <h2>Spending Trend Over Time</h2>
+    <img src="data:image/png;base64,{{ spending_trend_chart }}" alt="Spending Trend Chart">
+
+    <h2>Budget vs. Expenses</h2>
+    <img src="data:image/png;base64,{{ budget_vs_expenses_chart }}" alt="Budget vs. Expenses Chart">
+
+    <h2>Income vs. Expenses</h2>
+    <img src="data:image/png;base64,{{ income_vs_expenses_chart }}" alt="Income vs. Expenses Chart">
+
+    <h2>Expense Breakdown by Category</h2>
+    <img src="data:image/png;base64,{{ expense_breakdown_chart }}" alt="Expense Breakdown Pie Chart">
+
+    <br>
+    <a href="{% url 'home' %}">Back to Home</a>
+</body>
+</html>

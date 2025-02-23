@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Summary</title>
+</head>
+<body>
+    <h1>Summary</h1>
+
+    <h2>Expenses</h2>
+    <table border="1">
+        <tr>
+            <th>Category</th>
+            <th>Amount</th>
+            <th>Date</th>
+            <th>Description</th>
+        </tr>
+        {% for expense in expenses %}
+        <tr>
+            <td>{{ expense.category.name }}</td>
+            <td>{{ expense.amount }}</td>
+            <td>{{ expense.date }}</td>
+            <td>{{ expense.description }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4">No expenses recorded.</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h2>Incomes</h2>
+    <table border="1">
+        <tr>
+            <th>Amount</th>
+            <th>Date</th>
+            <th>Description</th>
+        </tr>
+        {% for income in incomes %}
+        <tr>
+            <td>{{ income.amount }}</td>
+            <td>{{ income.date }}</td>
+            <td>{{ income.description }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="3">No income recorded.</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <h2>Budgets</h2>
+    <table border="1">
+        <tr>
+            <th>Category</th>
+            <th>Limit</th>
+            <th>Month</th>
+        </tr>
+        {% for budget in budgets %}
+        <tr>
+            <td>{{ budget.category.name }}</td>
+            <td>{{ budget.limit }}</td>
+            <td>{{ budget.month|date:"F Y" }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="3">No budgets set.</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <br>
+    <a href="{% url 'home' %}">Back to Home</a>
+</body>
+</html>

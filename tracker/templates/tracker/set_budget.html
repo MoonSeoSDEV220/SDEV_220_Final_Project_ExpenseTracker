@@ -1,22 +1,39 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Set Budget</title>
-</head>
-<body>
-    <h1>Set Budget</h1>
+<h1>Set Budget</h1>
 
-    <form method="post">
-        <label for="category">Category:</label>
-        <input type="text" id="category" name="category" required><br><br>
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
 
-        <label for="limit">Budget Limit:</label>
-        <input type="number" id="limit" name="limit" step="0.01" required><br><br>
+<form method="post">
+    {% csrf_token %}
+    
+    <label for="category">Category:</label>
+    <select name="category" id="category" required>
+        <option value="" disabled selected>Select a category</option>
+        {% for category in categories %}
+            <option value="{{ category.name }}">{{ category.name }}</option>
+        {% endfor %}
+    </select>
 
-        <button type="submit">Set Budget</button>
-    </form>
+    <br><br>
 
-    <br>
-    <a href="{% url 'home' %}">Back to Home</a>
-</body>
-</html>
+    <label for="limit">Budget Limit:</label>
+    <input type="number" id="limit" name="limit" step="0.01" min="0" required>
+
+    <br><br>
+
+    <label for="month">Month:</label>
+    <input type="month" id="month" name="month" required>
+
+    <br><br>
+
+    <button type="submit">Set Budget</button>
+</form>
+
+<br>
+
+<a href="{% url 'home' %}">Back to Home</a>
