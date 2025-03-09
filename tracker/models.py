@@ -32,7 +32,7 @@ class Budget(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True)
     limit = models.DecimalField(max_digits=10, decimal_places=2)
-    month = models.CharField(max_length=7, default="2025-01")
+    month = models.DateField()
 
     def __str__(self):
         return f"{self.user.username} - {self.category.name if self.category else 'No Category'} - {self.month} - {self.limit}"

@@ -12,18 +12,16 @@
             <th>Category</th>
             <th>Amount</th>
             <th>Date</th>
-            <th>Description</th>
         </tr>
         {% for expense in expenses %}
         <tr>
             <td>{{ expense.category.name }}</td>
             <td>{{ expense.amount }}</td>
             <td>{{ expense.date }}</td>
-            <td>{{ expense.description }}</td>
         </tr>
         {% empty %}
         <tr>
-            <td colspan="4">No expenses recorded.</td>
+            <td colspan="3">No expenses recorded.</td>
         </tr>
         {% endfor %}
     </table>

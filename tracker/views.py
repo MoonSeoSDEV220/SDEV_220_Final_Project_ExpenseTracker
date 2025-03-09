@@ -26,6 +26,7 @@ def login_view(request):
             return redirect('home')
         else:
             messages.error(request, "Invalid username or password")
+            return render(request, 'tracker/login.html')
 
     return render(request, 'tracker/login.html')
 
@@ -43,13 +44,22 @@ def add_expense(request):
     
     if request.method == "POST":
         category_id = request.POST.get('category')
+        new_category_name = request.POST.get('new_category')
         amount = request.POST.get('amount')
         date = request.POST.get('date')
-        description = request.POST.get('description', '')
 
-        if not category_id or not amount or not date:
-            messages.error(request, "All fields are required.")
+        if not category_id and not new_category_name:
+            messages.error(request, "Please select an existing category or add a new one.")
             return render(request, 'tracker/add_expense.html', {'categories': categories})
+
+        if new_category_name:
+            category, created = Category.objects.get_or_create(name=new_category_name)
+        else:
+            try:
+                category = get_object_or_404(Category, id=int(category_id))
+            except ValueError:
+                messages.error(request, "Invalid category selected.")
+                return render(request, 'tracker/add_expense.html', {'categories': categories})
 
         try:
             amount = Decimal(amount)
@@ -62,7 +72,6 @@ def add_expense(request):
             messages.error(request, "Invalid date format. Please use YYYY-MM-DD.")
             return render(request, 'tracker/add_expense.html', {'categories': categories})
 
-        category = get_object_or_404(Category, id=category_id)
         Expense.objects.create(user=request.user, category=category, amount=amount, description=description, date=date)
 
         messages.success(request, "Expense added successfully!")
@@ -106,8 +115,17 @@ def set_budget(request):
     if request.method == "POST":
         category_name = request.POST.get("category")
         limit = request.POST.get('limit')
-        month = request.POST.get('month')
-        print(f"Received month: {month}")
+        month_input = request.POST.get('month')
+
+        if not month_input: 
+            messages.error(request, "Please select a month.")
+            return render(request, 'tracker/set_budget.html', {'categories': categories})
+
+        try:
+            month = datetime.strptime(month_input, "%Y-%m").date()  # ✅ Convert safely
+        except ValueError:
+            messages.error(request, "Invalid month format. Please use YYYY-MM.")
+            return render(request, 'tracker/set_budget.html', {'categories': categories})
 
         new_category = request.POST.get("new_category")
         if (not category_name and not new_category) or not limit or not month:
